@@ -1,0 +1,41 @@
+Step1: Initial spring boot application
+
+
+Step2: Added Blog Controller with mock data in memory
+
+		Test: http://localhost:8090/api/v1/blogs
+		
+		Json Response
+		[
+		{
+		blogId: 1,
+		title: "Blog-title1",
+		createDt: "2020-06-19T16:07:41.324",
+		author: "author-Blog-title1",
+		content: "content-Blog-title1"
+		},
+		{
+		blogId: 2,
+		title: "Blog-title2",
+		createDt: "2020-06-19T16:07:41.325",
+		author: "author-Blog-title2",
+		content: "content-Blog-title2"
+		},
+		{
+		blogId: 3,
+		title: "Blog-title3",
+		createDt: "2020-06-19T16:07:41.325",
+		author: "author-Blog-title3",
+		content: "content-Blog-title3"
+		}
+		]
+		
+		Create 
+		  {
+        "blogId": 4,
+        "title": "Blog-title4",
+        "createDt": "2019-06-19T16:07:41.324",
+        "author": "author-Blog-title4",
+        "content": "content-Blog-title4"
+    	  }
+    
