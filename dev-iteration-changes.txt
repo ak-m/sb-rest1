@@ -45,4 +45,21 @@ Step2: Added Blog Controller with mock data in memory
  
  Expect below error returned
  Got Error while processing request java.lang.Exception: Blog with id 5 already present!
+ 
+ 
+ Step4: Dockerize the application 
+ Run below to create docker image
+ 
+ Create Image:
+ docker build -f sbrest1.simple.DockerFile -t sbrest1:v1 .
+ 
+ Run Container:
+ d run -d --rm --name sbrest1-app -p8090:8090 sbrest1:v1
+ 
+ Verify:
+ d logs -f sbrest1-app
+ 
+ 
+ 
+ 
   
