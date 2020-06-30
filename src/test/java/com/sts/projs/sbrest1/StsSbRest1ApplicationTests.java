@@ -1,4 +1,4 @@
-package com.sts.projs;
+package com.sts.projs.sbrest1;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
