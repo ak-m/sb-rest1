@@ -38,4 +38,11 @@ Step2: Added Blog Controller with mock data in memory
         "author": "author-Blog-title4",
         "content": "content-Blog-title4"
     	  }
-    
+   
+   
+ Step3: Added global exception handling
+ When trying to add the same blog again
+ 
+ Expect below error returned
+ Got Error while processing request java.lang.Exception: Blog with id 5 already present!
+  
