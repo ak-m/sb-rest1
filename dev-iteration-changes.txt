@@ -168,5 +168,15 @@ While logged into jenkins console, click on scan multi branch pipeline now
 
 
 
+step7: Congiure different build tools 
+Where to find the env variables which jenkins uses
+
+http://localhost:8080/env-vars.html/
+
+
+Ref: https://www.youtube.com/watch?v=gdbA3vR2eDs
+
+
+
 
 
