@@ -120,4 +120,53 @@ pod/sbrest1-kapp-7cdc5f4c79-rxl4k   0/1     Terminating   0          15m
  
 NAME                                READY   STATUS    RESTARTS   AGE
 pod/sbrest1-kapp-7cdc5f4c79-lpzhp   1/1     Running   0          16s 
-  
+
+
+ste6: Configure project for multi state jenkins pipe line
+=========================================================
+
+ste6a:
+=====
+Install jenkins image locally using docker 
+
+
+Start Jenkins Container
+#######################
+docker run -d --name jen1 -v myjen-v1:/var/jenkins_home -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
+
+
+Note: above will create docker jenkins container with named volume
+so even if container crashes, the config./user settings will remain when we launch again via new container
+
+Fetch initial admin password from logs
+======================================
+docker logs -f jen1 
+
+open browser go to http://localhost:8080
+	enter the above admin password
+	create user jen-user & choose password
+	leave default plugins
+	save & continue
+	
+step6b:
+======
+create a task of time multi branch pipeline
+add source as git
+add the project repo url
+	configure git hub creds in the multi branch pipeline scope
+	step6b-1:
+	=======
+	configure jenkins creds for multi-branch pipeline for github
+add regular expression for accessing the branches
+save
+
+step6c:
+=======
+add Jenkins file in project with basic template
+
+While logged into jenkins console, click on scan multi branch pipeline now
+
+
+
+
+
