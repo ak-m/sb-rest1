@@ -1,6 +1,8 @@
 package com.sts.projs.sbrest1;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,19 +36,19 @@ public class StsSbRest1Application {
 }
 
 @ControllerAdvice
-class StsSbRest1GlobalErrorHandler{
+class StsSbRest1GlobalErrorHandler {
 	private static final Logger logger = LoggerFactory.getLogger(StsSbRest1GlobalErrorHandler.class);
-	
+
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	public String handleGlobalExceptions(Exception ex) {
 		logger.error("!!!!!!!! Processing error in handleGlobalExceptions {} !!!!!!!!!", ex.getCause());
-		
+
 		return "Got Error while processing request " + ex;
-		
+
 	}
-	
+
 }
 
 class Blog {
@@ -61,6 +63,15 @@ class Blog {
 
 	public Blog() {
 		logger.info("Blog created by {}", Thread.currentThread().getName());
+	}
+
+	public Blog(int blogId, String title, LocalDateTime createDt, String author, String content) {
+		super();
+		this.blogId = blogId;
+		this.title = title;
+		this.createDt = createDt;
+		this.author = author;
+		this.content = content;
 	}
 
 	public Blog(String title, LocalDateTime createDt, String author, String content) {
@@ -116,6 +127,7 @@ class Blog {
 
 interface BlogService {
 	List<Blog> getAllBlogs();
+
 	void addBlog(Blog newBlog) throws Exception;
 }
 
@@ -125,7 +137,7 @@ class MockBlogService implements BlogService {
 	private static final Logger logger = LoggerFactory.getLogger(MockBlogService.class);
 
 	private static List<Blog> inMemBlogDb = null;
-	
+
 	static {
 		logger.info("@@@@@@@@@@ Begin loading blogs data@@@@@@@@");
 		initMockBlogDb();
@@ -133,6 +145,13 @@ class MockBlogService implements BlogService {
 	}
 
 	private static void initMockBlogDb() {
+
+		initiViaForLoop();
+		
+		//initViaFixedArrays();
+	}
+
+	private static void initViaFixedArrays() {
 		inMemBlogDb = Arrays
 				.asList("Blog-title1", "Blog-title2", "Blog-title3").stream().map(title -> new Blog(title,
 						LocalDateTime.now().minusDays(title.length()), "author-" + title, "content-" + title))
@@ -145,25 +164,43 @@ class MockBlogService implements BlogService {
 		}
 	}
 
+	private static void initiViaForLoop() {
+		inMemBlogDb = new ArrayList<>();
+		for (int i = 1; i < 100; i++) {
+			;
+			inMemBlogDb.add(new Blog(i, "Blog-title" + i, LocalDateTime.now().minus(i, ChronoUnit.DAYS),
+					"Blog-Author" + i, "Blog-Content" + i));
+		}
+	}
+
 	@Override
 	public List<Blog> getAllBlogs() {
 		logger.info("Got service request to get all blogs ");
 		return inMemBlogDb;
 	}
 
-	
 	public void addBlog(Blog newBlog) throws Exception {
 		logger.info("Service adding new blog {}", newBlog);
-		
-		Blog blogInDb = inMemBlogDb.stream().filter(blog -> blog.getBlogId() == newBlog.getBlogId()).findAny().orElse(null);
-		
-		if(blogInDb !=null) {
+
+		Blog blogInDb = inMemBlogDb.stream().filter(blog -> blog.getBlogId() == newBlog.getBlogId()).findAny()
+				.orElse(null);
+
+		if (blogInDb != null) {
 			logger.error("Blog with id {} already present", newBlog.getBlogId());
 			throw new Exception("Blog with id " + newBlog.getBlogId() + " already present!");
-		}else {
+		} else {
 			logger.info("inserting new blog{} ", newBlog);
+			if(newBlog.getBlogId()!=findNextBlogId()) {
+				logger.warn("User entered blog id was not right {} actual is {}", newBlog.getBlogId(), findNextBlogId());
+			}
+			newBlog.setBlogId(findNextBlogId());
 			inMemBlogDb.add(newBlog);
 		}
+
+	}
+
+	private int findNextBlogId() {
+		return inMemBlogDb.size()+1;
 		
 	}
 }
@@ -183,7 +220,7 @@ class BlogRestController {
 		// get mock blog data
 		return blogService.getAllBlogs();
 	}
-	
+
 	@PostMapping(path = "/blogs")
 	public ResponseEntity<Object> createBlog(@RequestBody Blog newBlog) throws Exception {
 		logger.info("Got create request for new blog {}", newBlog);

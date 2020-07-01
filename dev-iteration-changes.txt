@@ -59,7 +59,65 @@ Step2: Added Blog Controller with mock data in memory
  Verify:
  d logs -f sbrest1-app
  
+ Step5: Deploy in kubernates cluster [docker for mac]
+ assumtion: kubenates cluster is already config & kubectl is downloaded
  
  
+ Step5a:Kubernates Configuration
  
+ create deployment:
+  ================================================================
+ kubectl create deployment sbrest1-kapp --image=sbrest1:v1
+ 
+ Step5b:
+ 
+ crate service for above deployment for a static ip/service name
+ ================================================================
+ kubectl create service nodeport sbrest1-kapp --tcp=32000:8090
+ 
+ 
+ Step5c:
+ 
+ Monitoring & Managring
+ 
+ Watch deployment via command line - 
+ ===================================
+ watch kubectl get all
+ 
+ 
+ Step5d:
+ Launch kubernates dashboard
+ 
+ start proxy:
+ ============ 
+ kubectl proxy
+ 
+ genrate token:
+ =============
+ kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+
+ Access dashboard
+ 
+ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+ 
+ 
+ Verify Availability
+ ====================
+ Delete a pod & see how kubernates launches the pod again
+ 
+ kubectl get pods 
+ 
+ -get pod id for next command 
+ kubectl delete pod sbrest1-kapp-7cdc5f4c79-rxl4k
+
+   
+ notice - original pod is terminated & a new pod is launched 
+ 
+NAME                                READY   STATUS        RESTARTS   AGE
+pod/sbrest1-kapp-7cdc5f4c79-lpzhp   1/1     Running       0          5s
+pod/sbrest1-kapp-7cdc5f4c79-rxl4k   0/1     Terminating   0          15m
+ 
+ 
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/sbrest1-kapp-7cdc5f4c79-lpzhp   1/1     Running   0          16s 
   
