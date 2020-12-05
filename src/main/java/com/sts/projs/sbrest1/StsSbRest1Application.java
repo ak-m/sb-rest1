@@ -216,7 +216,7 @@ class BlogRestController {
 
 	@GetMapping(path = "/blogs")
 	public List<Blog> getAllBlogs() {
-		logger.info("Got request {} for all blogs", blogReqCount.getAndIncrement());
+		logger.info("Got REQUEST {} for all blogs", blogReqCount.getAndIncrement());
 		// get mock blog data
 		return blogService.getAllBlogs();
 	}
