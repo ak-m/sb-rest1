@@ -1,0 +1,8 @@
+Creating read-me file in feature-b branch locally
+to test scenaio
+1. create branch locally
+2. make local changes
+3. commit locally
+4. push local changes to remote 
+
+
